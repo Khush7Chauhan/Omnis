@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
 import { createServer } from "node:http";
 
@@ -20,7 +23,7 @@ app.use(express.urlencoded({limit:"40kb", extended: true}));
 app.use("api/v1/users", userRoutes);
 const start = async () => {
     app.set("mongo_user")
-    const connectionDb = await mongoose.connect("")
+    const connectionDb = await mongoose.connect(process.env.MONGO_URL)
 
     console.log(`MONGO Connected DB HOst: ${connectionDb.connection.host}`)
     server.listen(app.get("port"), () => {

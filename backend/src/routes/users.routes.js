@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { addToHistory, getUserHistory, login, register } from "../controllers/user.controller.js";
+import { addToHistory, getUserHistory, login, register } from "../controller/user.controller.js";
 
-const route = Router();
+const router = Router();
 
 router.route("/login").post(login)
 router.route("/register").post(register)
