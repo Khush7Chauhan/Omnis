@@ -173,4 +173,39 @@ let getUserMedia = () => {
     }
 }
 
+let getDisplayMediaSuccess = (stream)=>{
+    console.log('HERE');
+    try{
+        window.localStream.getTracks().forEach(track=>track.stop())
+    }catch(e) {
+        console.log(e);
+    }
+    window.localStream = stream;
+    localVideoRef.current.srcObject = stream;
+
+    for(let id in connections ) {
+        if(id === socketIdRef.current) continue
+
+        connections[id].addStream(window.localStream)
+
+        connections[id].createOffer().then((description)=>{
+            connections[id].setLocalDescription(description)
+                .then(()=>{
+                    socketRef.current.emit('signal',id , JSON.stringify({'sdp': connections[id].localDescription}))
+                })
+                .catch(e=>console.log(e))
+        })
+    }
+    stream.getTracks().forEach(track=> track.onended=()=>{
+        setScreen(False)
+
+        try{
+            let track = localVideoRef.current.srcObject.getTracks()
+            track.forEach(track=>track.stop())
+        }catch(e){console.log(e)}
+
+        let blackSilence = (...args) => new MediaStream([black(...args), silence()])
+        window.localStream = blackSilence
+    })
+}
 
