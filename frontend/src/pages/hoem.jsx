@@ -63,3 +63,4 @@ function HomeComponent() {
         </>
     )
 }
+export default withAuth(HomeComponent)
